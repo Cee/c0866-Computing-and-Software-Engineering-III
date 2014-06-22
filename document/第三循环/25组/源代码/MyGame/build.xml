@@ -1,0 +1,57 @@
+
+<project name="TTAXC" default="run"  >
+
+<property name = "project-name" value="TTAXC" />
+<property name = "build" value="build" />
+<property name = "lib" value = "lib" />
+<property name = "src" value = "src" />
+<property name = "build.classes" value="${build}/classes"/>
+<property name = "jar.dir" value="dist" />
+
+
+<path id="compile.classpath">
+	<fileset dir= "${lib}" >
+	<include name="**/*.jar"/>	
+	</fileset>
+</path>
+
+<target name = "prepare" >
+	<mkdir dir = "${build}"/>
+	<mkdir dir = "${build.classes}" />
+	<mkdir dir = "${jar.dir}" />
+	
+</target>
+
+<target name = "clean">
+	<delete dir = "${build}" />
+	<delete dir = "${jar.dir}"/>
+</target>
+
+
+<target name = "compile" depends="clean,prepare" >
+	<echo message="Compiling the source code!"/>
+	<javac srcdir="${src}" destdir = "${build.classes}" deprecation="true" includeantruntime="on" encoding = "utf-8" >
+	<classpath refid = "compile.classpath"/>
+	</javac>
+</target>
+
+<target name = "run" depends="jar">
+	<java jar="${jar.dir}/Client.jar" fork="true" maxmemory="256m" />
+</target>
+
+<target name="jar" depends="compile">
+	<copy todir="${jar.dir}/lib">
+		<fileset dir="${lib}"/>
+	</copy>
+		<echo message="正在打包客户端"/>
+	<jar destfile= "${jar.dir}/Client.jar" basedir="${build.classes}">
+		<manifest>
+			<attribute name = "Main-Class" value="excalibur.game.launcher.Launcher" />
+			<attribute name = "Class-Path" value="lib/saint.jar" />	
+		</manifest>
+	</jar>
+</target>
+
+</project>
+
+ 	
